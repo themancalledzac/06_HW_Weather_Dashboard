@@ -1,3 +1,5 @@
-.websiteMainContainer {
-  max-width: 80%;
+.jumbo {
+  background-color: rgb(38, 49, 58);
+  margin-bottom: 20px;
+  color: white;
 }
