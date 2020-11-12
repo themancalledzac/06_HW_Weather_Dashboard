@@ -3,3 +3,12 @@
   margin-bottom: 20px;
   color: white;
 }
+
+#fiveDayContainer {
+  padding-right: 1em;
+}
+
+#fiveDayContainer > div {
+  /* margin-right: 2em; */
+  max-width: 95%;
+}
