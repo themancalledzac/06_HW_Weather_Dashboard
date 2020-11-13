@@ -12,3 +12,7 @@
   /* margin-right: 2em; */
   max-width: 95%;
 }
+
+.displayNone {
+  display: none;
+}
