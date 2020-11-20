@@ -28,8 +28,15 @@ function mainWeatherDisplay( city ) {
         method: "GET"
       }).then(function(response) {
         console.log(response)
-        var tempF = (response.main.temp);
-        $("#mainTemp").text(tempF);
+
+        var mainTemp = Math.ceil(response.main.temp);
+        $("#mainTemp").text("Temperature: " + mainTemp + " F");
+
+        var humidity = (response.main.humidity);
+        $("#humidity").text("Humidity: " + humidity + "%");
+
+        var windSpeed = (response.wind.speed);
+        $("#windSpeed").text("Wind Speed: " + windSpeed + "MPH");
 
         console.log(response.main.temp);
         // $(".data1").text("Temperature: " + response.main.temp + "F");
@@ -76,7 +83,7 @@ function saveToStorage() {
     btnMain.on('click', function(event) {
         event.preventDefault();
         var city = $("#citiesInput").val().trim();
-
+        $("#cityTitle").text( city );
         mainWeatherDisplay( city );
         fiveDayWeatherDisplay( city );
         localStorage.setItem( 'cityArray', JSON.stringify(city));
