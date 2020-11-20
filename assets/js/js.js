@@ -72,9 +72,38 @@ function fiveDayWeatherDisplay( city ) {
 };
 
 
-function saveToStorage() {
+function cityArray() {
 
-    localStorage.setItem('cityArray', JSON.stringify(cities));
+    // when click happens, wipe cityArray, and repopulate with localStorage data
+    // call storageAside function
+};
+
+
+
+
+
+function storageAside( city ) {
+
+    // for loop to go through all cityArray
+    for (let i = 0; i < city.length; i++) {
+        var cities = city[i];
+
+        var cityEl = $("<li id='cities' class='list-group-item d-flex justify-content-between 1h-condensed displayNone'>").text(cities);
+        $("#citiesList").prepend( cityEl );
+
+        console.log(cities);
+
+
+        // create list element with id: "cty" + [i];
+        // $("#citiesList").prepend(
+        //     $("<div/>", {
+        //     "id": city,
+        //     "class": "list-group-item d-flex justify-content-between 1h-condensed displayNone",
+        //     "text":  city ,
+        //     }
+        // ));
+    };
+    
 };
 
 // Button Handler--------------------------------------------------------------------------------//
@@ -86,5 +115,7 @@ function saveToStorage() {
         $("#cityTitle").text( city );
         mainWeatherDisplay( city );
         fiveDayWeatherDisplay( city );
+        storageAside( city );
         localStorage.setItem( 'cityArray', JSON.stringify(city));
+        console.log(city)
     });
