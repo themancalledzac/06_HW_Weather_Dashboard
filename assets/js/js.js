@@ -1,115 +1,63 @@
-// GIVEN a weather dashboard with form inputs
+    // ---------------------------------------------- CURRENT CODE----------------------------------------------------------------//
 
-// create main button to save data---------------------------------------------------------------//
-var btnMain = $("#btnMain");
-btnMain.on('click', saveToStorage);
-var weatherAPI = ("d72f1a4bff52ece19272994df97781f7");
-var cityArray = [];
 
-// $('.cities.children:empty').hide();
-// For loop for the saved search cities
-for (let i = 1; i <= 8; i++) {
-    //---------------DIV ID = '#hour-" + 1;"-----------------------------------------------------//
-    var elementId = $("#cty" + i);
-    $(elementId).attr('data-key', i);
-    //---------------DIV ID 
-    // if city text is empty, don't show element, NOT SURE THIS IS CORRECT
-    if (elementId.text === null) {
-        $(elementId).hide();
-    }
-    // console.log(elementId);
+// Global Variables------------------------------------------------------------------------------//
+    //--1. Main button, 2. input, 3. List of Cities searched , 4. weatherAPI key-------------//
+    var btnMain = $('#btnMain');
+    var cityInput = $('#citiesInput');
+    var cityList = $('#citiesList');
+    var weatherAPI = ("d72f1a4bff52ece19272994df97781f7");
+    var fivedayAPI = ("305d10ba9b33ae5a8b09b43025d5b77f");
+    var cityArray = [];
+
+
+
+
+    // FUNCTION handleSearch-------------------------------------------------------------------------//
+    //  1. Is city Real? Start Loading data in background------------------------------------//
+    //  2. If not a real city? Let User know-------------------------------------------------//
+    //  3. line24 is our first API search----------------------------------------------------//
+function mainWeatherDisplay( city ) {
+
+    var city = cityInput.val().toLowerCase();
+    var weatherURL = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=imperial&appid=" + weatherAPI;
+    console.log(weatherURL);
+    //  AJAX for getting data--------------------------------------------------------------------//
+    $.ajax({
+        url: weatherURL,
+        method: "GET"
+      }).then(function(response) {
+        console.log(response)
+        var tempF = (response.main.temp);
+        $("#mainTemp").text(tempF);
+
+        console.log(response.main.temp);
+        // $(".data1").text("Temperature: " + response.main.temp + "F");
+        // $(".data1").text("Humidity: " + response.main.humidity + "%");
+        // $(".data1").text("Wind Speed: " + response.wind.speed + "mph");
+        // only if the city is valid data
+        // if city already exists in arraay
+        // Create button, append 
+        // add to array
+        // save to storage
+
+    });
+
 };
 
 
+function fiveDayWeatherDisplay( city ) {
 
+    var city = cityInput.val().toLowerCase();
+    var fiveDayURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&units=imperial&appid=" + fivedayAPI;
+    console.log(fiveDayURL);
+    //  AJAX for getting data--------------------------------------------------------------------//
+    $.ajax({
+        url: fiveDayURL,
+        method: "GET"
+      }).then(function(response) {
+        console.log(response);
 
-
-
-// FUNCTION for saving to storage----------------------------------------------------------------//
-function saveToStorage(event) {
-    event.preventDefault();
-
-        // Need a pointer so that every button click moves the data to the next cty1/cty2, etc---//
-        cityPointer = "";
-
-        // Do I need a for loop so every cityInput saves to the NEXT cty1/cty2, etc?
-        // text area data stored to a variable
-        let cityInput = $(this).parent('div').parent('div').parent('form').next().children('li').data('time');
-        let value = $(this).parent('div').parent('div').children('input').val();
-        // 1 push into array
-        // 2 JSONIFYING array
-        // 3 push JSONIFIED ARRAY into localStorage
-        localStorage.setItem(cityArray, value);
-        console.log(cityInput);
-    savedCity();
-
-};
-
-
-// Saving to JSONIFIED array
-
-// FUNCTION to add city name to each city element
-
-// pull from localstorage
-// un-stringify(parse) data
-// loop over array
-
-
-function savedCity() {
-    for (let ii=1; ii <= 8; ii++) {
-        let savedData = localStorage.getItem('cty' + ii);
-        $(`#cty${ii}`).text(savedData)
-    
-    };
-};
-// Calls function so that reloading page will show saved cities.
-savedCity();
-
-// Variable for button listener for all rendered cities------------------------------------------//
-var btnCities = $("")
-
-
-// FUNCTION to display cities from Saved data----------------------------------------------------//
-
-// for (let ii=1; ii <= 8; ii++) {
-//     let savedData = localStorage.getItem('cty' + ii);
-//     $(`#cty${ii}`).text(savedData)
-
-// };
-
-
-
-    // 5 day forecast
-// api.openweathermap.org/data/2.5/forecast?q={USER INPUT}&appid={API key}
-
-    // main forecast for city
-// api.openweathermap.org/data/2.5/weather?q={city name}&appid={API key}
-
-    // UV index, needs Lat/Long from our main weather forcast
-// http://api.openweathermap.org/data/2.5/uvi?lat={lat}&lon={lon}&appid={API key}
-
-// 2 separate calls
-
-$("")
-
-
-function handleSearch() {
-    // specifically handling callback function and click
-    makeWeatherRequest( search );
-};
-
-
-function makeWeatherRequest( search ) {
-    
-    $.ajax( queryURL ).then(function( response ) {
-
-        // START rendering data to HTML
-
-        // THEN get the lat and lng out of the 'response' object
-
-        // make variables for lat and for lng
-
-        // NEXT call makeOneCallRequest and pass in the lat and lng.
 
 
     });
@@ -117,21 +65,19 @@ function makeWeatherRequest( search ) {
 };
 
 
-function makeOneCallRequest( lat, lon ) {
+function saveToStorage() {
 
-    // next, we need to build the URL for the first API request
-    //
+    localStorage.setItem('cityArray', JSON.stringify(cities));
 };
 
-// what is the data I NEED to make this work ----------------------------------------------------//
+// Button Handler--------------------------------------------------------------------------------//
+    //  1. handleSearch: To verify city is real, in system, and can move forward-------------//
+    //  2. saveToStorage: To save data to local storage string-------------------------------//
+    btnMain.on('click', function(event) {
+        event.preventDefault();
+        var city = $("#citiesInput").val().trim();
 
-console.log(localStorage);
-
-
-
-
-
-
-document.getElementById("MyElement").classList.add('d-flex');
-
-document.getElementById("MyElement").classList.remove('displayNone');
+        mainWeatherDisplay( city );
+        fiveDayWeatherDisplay( city );
+        localStorage.setItem( 'cityArray', JSON.stringify(city));
+    });
